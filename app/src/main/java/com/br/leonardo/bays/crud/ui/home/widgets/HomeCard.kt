@@ -1,0 +1,66 @@
+package com.br.leonardo.bays.crud.ui.home.widgets
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import com.br.leonardo.bays.crud.domain.model.Match
+
+@Composable
+fun HomeCard(match: Match) {
+    Card(
+        onClick = {
+            println("alou bocha")
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+        ) {
+            Text(
+                text = match.homeTeam,
+                modifier = Modifier
+                    .weight(1f)
+                    .wrapContentHeight(),
+                textAlign = TextAlign.Start,
+                maxLines = Int.MAX_VALUE,
+                overflow = TextOverflow.Visible
+            )
+            Row(
+                modifier = Modifier.padding(horizontal = 12.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = match.homeScore.toString())
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = "X")
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = match.awayScore.toString())
+            }
+
+            Text(
+                text = match.awayTeam,
+                modifier = Modifier
+                    .weight(1f)
+                    .wrapContentHeight(),
+                textAlign = TextAlign.End,
+                maxLines = Int.MAX_VALUE,
+                overflow = TextOverflow.Visible
+            )
+        }
+
+    }
+}
