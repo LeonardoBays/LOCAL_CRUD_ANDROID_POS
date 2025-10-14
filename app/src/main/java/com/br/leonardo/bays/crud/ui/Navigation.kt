@@ -11,6 +11,7 @@ import com.br.leonardo.bays.crud.ui.home.HomeScreen
 import com.br.leonardo.bays.crud.ui.manager_match.ManagerMatchScreen
 import com.br.leonardo.bays.crud.ui.match.MatchScreen
 import com.br.leonardo.bays.crud.viewmodel.home.HomeViewModel
+import com.br.leonardo.bays.crud.viewmodel.manager_match.ManagerMatchViewModel
 import com.br.leonardo.bays.crud.viewmodel.match.MatchViewModel
 
 @Composable
@@ -31,8 +32,6 @@ fun Navigation() {
             ),
         ) { entry ->
             val viewModel: MatchViewModel = hiltViewModel()
-
-            println("entry.arguments?.getString(\"matchId\"): ${entry.arguments?.getLong("matchId")}")
             val matchId = entry.arguments?.getLong("matchId") ?: 0
             viewModel.loadMatch(matchId)
             MatchScreen(navController, viewModel)
@@ -47,8 +46,10 @@ fun Navigation() {
                 }
             ),
         ) { entry ->
-            val matchId = entry.arguments?.getString("matchId")?.toIntOrNull()
-            ManagerMatchScreen(navController, matchId)
+            val viewModel: ManagerMatchViewModel = hiltViewModel()
+            val matchId = entry.arguments?.getString("matchId")?.toLong()
+            viewModel.loadMatch(matchId)
+            ManagerMatchScreen(navController, viewModel)
         }
     }
 }

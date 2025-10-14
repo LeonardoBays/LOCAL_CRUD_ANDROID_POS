@@ -29,7 +29,8 @@ fun HomeCard(navController: NavController, match: Match) {
             }
 
             if (!match.isFinished()) {
-                navController.navigate(Screen.ManagerMatchScreen.route)
+                navController.navigate(Screen.ManagerMatchScreen.route + "?matchId=${match.id}")
+                return@Card
             }
 
         }
@@ -56,7 +57,7 @@ fun HomeCard(navController: NavController, match: Match) {
             ) {
                 Text(text = match.homeScore.toString())
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "X")
+                Text(text = " - ")
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(text = match.awayScore.toString())
             }

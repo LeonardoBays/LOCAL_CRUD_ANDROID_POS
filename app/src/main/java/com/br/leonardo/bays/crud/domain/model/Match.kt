@@ -51,6 +51,8 @@ data class Match(
         return now.after(startAt) && now.before(endAt)
     }
 
+    fun isCreating(): Boolean = id <= 0
+
     fun isFinished(): Boolean {
         val now = Date()
         return now.after(endAt)
