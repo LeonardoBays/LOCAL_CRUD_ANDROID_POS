@@ -50,7 +50,6 @@ android {
 dependencies {
 
     implementation(libs.hilt.android)
-//    implementation(libs.hilt.viewmodel)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -64,6 +63,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.navigation)
+    implementation(libs.androidx.hilt.navigation)
+    implementation(libs.androidx.compose.material)
 
     testImplementation(libs.junit)
 
@@ -77,6 +79,5 @@ dependencies {
 
     ksp(libs.androidx.room.compiler)
 
-//    kapt(libs.hilt.viewmodel.compiler)
     kapt(libs.hilt.compiler)
 }

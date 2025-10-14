@@ -15,13 +15,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.br.leonardo.bays.crud.domain.model.Match
+import com.br.leonardo.bays.crud.ui.Screen
 
 @Composable
-fun HomeCard(match: Match) {
+fun HomeCard(navController: NavController, match: Match) {
     Card(
         onClick = {
-            println("alou bocha")
+            if (match.isInProgress()) {
+                navController.navigate(Screen.MatchScreen.route + "/${match.id}")
+                return@Card
+            }
+
+            if (!match.isFinished()) {
+                navController.navigate(Screen.ManagerMatchScreen.route)
+            }
+
         }
     ) {
         Row(

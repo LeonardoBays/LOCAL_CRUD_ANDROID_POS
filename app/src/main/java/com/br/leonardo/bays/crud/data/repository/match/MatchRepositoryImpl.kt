@@ -17,8 +17,8 @@ class MatchRepositoryImpl @Inject constructor(private val dao: MatchDao) : Match
         }
     }
 
-    override fun getMatchById(id: Int): Flow<Match> {
-        return dao.getById(id).map { it.toDomain() }
+    override fun getMatchById(id: Long): Flow<Match?> {
+        return dao.getById(id).map { it?.toDomain() }
     }
 
     override suspend fun insertMatch(match: Match) {
@@ -31,6 +31,14 @@ class MatchRepositoryImpl @Inject constructor(private val dao: MatchDao) : Match
 
     override suspend fun deleteMatch(match: Match) {
         dao.delete(match.toEntity())
+    }
+
+    override suspend fun updateHomeScore(id: Long, score: Long) {
+        dao.updateHomeScore(id, score)
+    }
+
+    override suspend fun updateAwayScore(id: Long, score: Long) {
+        dao.updateAwayScore(id, score)
     }
 
 }

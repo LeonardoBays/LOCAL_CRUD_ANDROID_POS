@@ -9,11 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import com.br.leonardo.bays.crud.ui.Screen
 
 @Composable
-fun HomeFAB() {
+fun HomeFAB(navController: NavController) {
     FloatingActionButton(
-        onClick = ::onPressed,
+        onClick = { onPressed(navController) },
         containerColor = MaterialTheme.colorScheme.primary,
         contentColor = Color.White
     ) {
@@ -24,12 +26,6 @@ fun HomeFAB() {
     }
 }
 
-private fun onPressed() {
-    println("Pressed")
-}
-
-@Preview
-@Composable
-private fun HomeFABPreview() {
-    HomeFAB()
+private fun onPressed(navController: NavController) {
+    navController.navigate(Screen.ManagerMatchScreen.route)
 }

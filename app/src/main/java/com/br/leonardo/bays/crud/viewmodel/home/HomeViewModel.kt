@@ -32,24 +32,6 @@ class HomeViewModel @Inject constructor(
             _uiState.value = HomeState.Loading
             try {
                 matchRepository.getAllMatch().collectLatest { list ->
-
-//                    val date = Date()
-//                    val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-//                    val dateString = formatter.format(date)
-
-//                    val list = listOf(
-//                        Match(
-//                            id = 1,
-//                            homeTeam = "Agropesca Jacare",
-//                            homeScore = 1,
-//                            awayTeam = "Estagiarios Reservas",
-//                            awayScore = 0,
-//                            createAt = dateString,
-//                            startAt = dateString,
-//                            endAt = dateString
-//                        )
-//                    )
-
                     when (list.isEmpty()) {
                         true -> _uiState.value = HomeState.Empty
                         false -> _uiState.value = HomeState.Success(list)
@@ -73,7 +55,6 @@ class HomeViewModel @Inject constructor(
 
         val calendar = Calendar.getInstance()
         calendar.time = Date()
-        calendar.add(Calendar.DAY_OF_YEAR, 10)
 
         val startAt: Date = calendar.time
 

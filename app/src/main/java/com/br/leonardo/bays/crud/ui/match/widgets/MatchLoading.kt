@@ -1,4 +1,4 @@
-package com.br.leonardo.bays.crud.ui.home.widgets
+package com.br.leonardo.bays.crud.ui.match.widgets
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun HomeLoading() {
+fun MatchLoading() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

@@ -19,11 +19,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.br.leonardo.bays.crud.R
+import com.br.leonardo.bays.crud.ui.Screen
 import com.br.leonardo.bays.crud.viewmodel.home.HomeViewModel
 
 @Composable
-fun HomeEmptyList(viewModel: HomeViewModel) {
+fun HomeEmptyList(navController: NavController, viewModel: HomeViewModel) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -53,6 +55,7 @@ fun HomeEmptyList(viewModel: HomeViewModel) {
                 contentColor = Color.White,
             ),
             onClick = {
+//                navController.navigate(Screen.ManagerMatchScreen.route)
                 viewModel.saveMatch()
             }
         ) {
@@ -60,10 +63,4 @@ fun HomeEmptyList(viewModel: HomeViewModel) {
         }
     }
 
-}
-
-@Preview
-@Composable
-private fun HomeEmptyListPreview() {
-//    HomeEmptyList()
 }

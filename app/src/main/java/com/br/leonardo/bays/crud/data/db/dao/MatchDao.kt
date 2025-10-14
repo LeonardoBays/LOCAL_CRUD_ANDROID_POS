@@ -23,6 +23,12 @@ interface MatchDao {
     @Query("SELECT * FROM `MATCH` ORDER BY startAt desc, endAt desc")
     fun getAll(): Flow<List<MatchEntity>>
 
-    @Query("SELECT * FROM `MATCH` WHERE id = :id")
-    fun getById(id: Int): Flow<MatchEntity>
+    @Query("SELECT * FROM `MATCH` WHERE id = :id LIMIT 1")
+    fun getById(id: Long): Flow<MatchEntity?>
+
+    @Query("UPDATE `MATCH` SET homeScore = :score WHERE id = :id")
+    suspend fun updateHomeScore(id: Long, score: Long)
+
+    @Query("UPDATE `MATCH` SET awayScore = :score WHERE id = :id")
+    suspend fun updateAwayScore(id: Long, score: Long)
 }
