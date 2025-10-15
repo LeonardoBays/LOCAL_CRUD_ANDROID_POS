@@ -1,8 +1,7 @@
-package com.br.leonardo.bays.crud.ui.home.widgets
+package com.br.leonardo.bays.crud.ui.manager_match.widgets
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +23,7 @@ import androidx.room.util.TableInfo
 import com.br.leonardo.bays.crud.R
 
 @Composable
-fun HomeFail(message: String) {
+fun ManagerMatchFail(message: String) {
 
     val scrollState = rememberScrollState()
 

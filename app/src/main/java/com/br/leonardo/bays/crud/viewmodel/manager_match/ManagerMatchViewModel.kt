@@ -22,6 +22,19 @@ class ManagerMatchViewModel @Inject constructor(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
+    private val _dtInicial = MutableStateFlow<Long?>(null)
+    val dtInicial: StateFlow<Long?> = _dtInicial
+
+    private val _dtFinal = MutableStateFlow<Long?>(null)
+    val dtFinal: StateFlow<Long?> = _dtFinal
+
+
+    private val _showDtInicialPicker = MutableStateFlow<Boolean>(false)
+    val showDtInicialPicker: StateFlow<Boolean> = _showDtInicialPicker
+
+    private val _showDtFinalPicker = MutableStateFlow<Boolean>(false)
+    val showDtFinalPicker: StateFlow<Boolean> = _showDtFinalPicker
+
     fun loadMatch(matchId: Long?) {
         try {
             matchId?.let {
@@ -29,6 +42,10 @@ class ManagerMatchViewModel @Inject constructor(
                     matchRepository.getMatchById(matchId).collect { match ->
                         match?.let {
                             _match.value = match
+
+                            _dtInicial.value = match.startAt.time
+                            _dtFinal.value = match.endAt.time
+
                         }
                     }
                 }
@@ -49,6 +66,15 @@ class ManagerMatchViewModel @Inject constructor(
             it.copy(awayTeam = name)
         }
     }
+
+    fun atualizaDtInicial(date: Long) { _dtInicial.update { date } }
+    fun atualizaDtFinal(date: Long) { _dtFinal.update { date } }
+
+    fun openDtInicialPicker() { _showDtInicialPicker.update { true } }
+    fun openDtFinalPicker() { _showDtFinalPicker.update { true } }
+
+    fun hideDtInicialPicker() { _showDtInicialPicker.update { false } }
+    fun hideDtFinalPicker() { _showDtFinalPicker.update { false } }
 
     fun salvarPartida() {}
 }

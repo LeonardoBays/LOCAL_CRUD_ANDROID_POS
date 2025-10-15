@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.br.leonardo.bays.crud.ui.ui.theme.CRUDTheme
+import com.br.leonardo.bays.crud.ui.theme.CRUDTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
