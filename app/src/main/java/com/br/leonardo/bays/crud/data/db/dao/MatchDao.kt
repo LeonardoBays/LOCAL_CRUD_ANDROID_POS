@@ -20,7 +20,7 @@ interface MatchDao {
     @Delete
     suspend fun delete(match: MatchEntity)
 
-    @Query("SELECT * FROM `MATCH` ORDER BY startAt desc, endAt desc")
+    @Query("SELECT * FROM `MATCH` ORDER BY startAt asc, endAt asc")
     fun getAll(): Flow<List<MatchEntity>>
 
     @Query("SELECT * FROM `MATCH` WHERE id = :id LIMIT 1")

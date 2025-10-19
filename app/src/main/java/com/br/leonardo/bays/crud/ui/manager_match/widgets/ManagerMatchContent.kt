@@ -10,10 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,17 +46,17 @@ fun ManagerMatchContent(navController: NavController, viewModel: ManagerMatchVie
     val dtFinal by viewModel.dtFinal.collectAsState()
     val hrInicial by viewModel.hrInicial.collectAsState()
     val hrFinal by viewModel.hrFinal.collectAsState()
+    val showErrorDialog by viewModel.showErrorDialog.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+    val isCreating by viewModel.isCreating.collectAsState()
     val dateLabelInicial = viewModel.dateLabelInicial
     val dateLabelFinal = viewModel.dateLabelFinal
     val isSaving = viewModel.isSaving.collectAsState()
     val homeTeamName = viewModel.homeTeamName.collectAsState()
     val awayTeamName = viewModel.awayTeamName.collectAsState()
-    val scrollState = rememberScrollState()
 
     Column(
-        Modifier
-            .fillMaxSize()
-//            .horizontalScroll(scrollState)
+        Modifier.fillMaxSize()
     ) {
 
         Column(
@@ -100,10 +101,8 @@ fun ManagerMatchContent(navController: NavController, viewModel: ManagerMatchVie
             }
 
             if (showDtInicialPicker) {
-                val minDate = LocalDate.now()
-                    .atStartOfDay()
-                    .toInstant(ZoneOffset.UTC)
-                    .toEpochMilli()
+                val minDate =
+                    LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
 
                 ManagerMatchDatePicker(
                     onDateSelected = {
@@ -120,10 +119,8 @@ fun ManagerMatchContent(navController: NavController, viewModel: ManagerMatchVie
             }
 
             if (showDtFinalPicker) {
-                val minDate = LocalDate.now()
-                    .atStartOfDay()
-                    .toInstant(ZoneOffset.UTC)
-                    .toEpochMilli()
+                val minDate =
+                    LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
 
                 ManagerMatchDatePicker(
                     onDateSelected = {
@@ -148,8 +145,7 @@ fun ManagerMatchContent(navController: NavController, viewModel: ManagerMatchVie
                     onTimeSelected = { hour, minute ->
                         viewModel.atualizaHrInicial(
                             LocalTime.of(
-                                hour,
-                                minute
+                                hour, minute
                             )
                         )
                     },
@@ -167,8 +163,7 @@ fun ManagerMatchContent(navController: NavController, viewModel: ManagerMatchVie
                     onTimeSelected = { hour, minute ->
                         viewModel.atualizaHrFinal(
                             LocalTime.of(
-                                hour,
-                                minute
+                                hour, minute
                             )
                         )
                     },
@@ -177,8 +172,19 @@ fun ManagerMatchContent(navController: NavController, viewModel: ManagerMatchVie
                 )
             }
 
-        }
+            if (showErrorDialog) {
+                AlertDialog(
+                    onDismissRequest = { viewModel::hideErrorDialog },
+                    confirmButton = {
+                        TextButton(onClick = viewModel::hideErrorDialog) {
+                            Text(text = "Ok")
+                        }
+                    },
+                    text = { Text(text = errorMessage ?: "Ops, algo inesperado aconteceu!") }
+                )
+            }
 
+        }
 
         Button(
             modifier = Modifier
@@ -187,8 +193,8 @@ fun ManagerMatchContent(navController: NavController, viewModel: ManagerMatchVie
             onClick = {
                 if (!isSaving.value) {
                     viewModel.onSaveMatchClicked(
-                        onSuccess = { },
-                        onFail = { text -> println(text) },
+                        onSuccess = { navController.popBackStack() },
+                        onFail = viewModel::openErrorDialog,
                     )
                 }
             }
@@ -197,7 +203,7 @@ fun ManagerMatchContent(navController: NavController, viewModel: ManagerMatchVie
             if (isSaving.value) {
                 CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
             } else {
-                val text = if (match.isCreating()) "Cadastrar partida" else "Atualizar partida"
+                val text = if (isCreating) "Cadastrar partida" else "Atualizar partida"
                 Text(text)
             }
         }

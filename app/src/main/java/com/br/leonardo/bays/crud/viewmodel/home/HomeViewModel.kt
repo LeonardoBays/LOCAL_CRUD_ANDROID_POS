@@ -44,37 +44,4 @@ class HomeViewModel @Inject constructor(
 
         }
     }
-
-    private fun deleteMatch(match: Match) {
-        viewModelScope.launch {
-            matchRepository.deleteMatch(match)
-        }
-    }
-
-    fun saveMatch() {
-
-        val calendar = Calendar.getInstance()
-        calendar.time = Date()
-
-        val startAt: Date = calendar.time
-
-        calendar.add(Calendar.MINUTE, 80)
-        val endAt: Date = calendar.time
-
-        val match = Match(
-            id = 0,
-            homeTeam = "Agropesca Jacare",
-            homeScore = 1,
-            awayTeam = "Estagiarios Reservas",
-            awayScore = 0,
-            createAt = Date(),
-            startAt = startAt,
-            endAt = endAt,
-        )
-
-        viewModelScope.launch {
-            matchRepository.insertMatch(match)
-        }
-    }
-
 }

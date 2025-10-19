@@ -4,13 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.br.leonardo.bays.crud.data.repository.match.MatchRepository
 import com.br.leonardo.bays.crud.domain.model.Match
+import com.br.leonardo.bays.crud.utils.exceptions.InvalidDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
@@ -23,8 +29,8 @@ class ManagerMatchViewModel @Inject constructor(
     private val matchRepository: MatchRepository
 ) : ViewModel() {
 
-    private val _match = MutableStateFlow<Match>(Match())
-    val match: StateFlow<Match> = _match
+    private val _match = MutableStateFlow<Match?>(null)
+    val match: StateFlow<Match?> = _match
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
@@ -47,7 +53,6 @@ class ManagerMatchViewModel @Inject constructor(
     private val _hrFinal = MutableStateFlow<LocalTime?>(null)
     val hrFinal: StateFlow<LocalTime?> = _hrFinal
 
-
     private val _showDtInicialPicker = MutableStateFlow<Boolean>(false)
     val showDtInicialPicker: StateFlow<Boolean> = _showDtInicialPicker
 
@@ -60,8 +65,17 @@ class ManagerMatchViewModel @Inject constructor(
     private val _showHrFinalPicker = MutableStateFlow<Boolean>(false)
     val showHrFinalPicker: StateFlow<Boolean> = _showHrFinalPicker
 
+    private val _showErrorDialog = MutableStateFlow<Boolean>(false)
+    val showErrorDialog: StateFlow<Boolean> = _showErrorDialog
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
     private val _isSaving = MutableStateFlow<Boolean>(false)
     val isSaving: StateFlow<Boolean> = _isSaving
+
+    private val _isCreating = MutableStateFlow<Boolean>(true)
+    val isCreating: StateFlow<Boolean> = _isCreating
 
     val dateLabelInicial: String
         get() {
@@ -93,6 +107,9 @@ class ManagerMatchViewModel @Inject constructor(
                 viewModelScope.launch {
                     matchRepository.getMatchById(matchId).collect { match ->
                         match?.let {
+
+                            _isCreating.value = false
+
                             _match.value = it
 
                             _homeTeamName.value = it.homeTeam
@@ -181,6 +198,16 @@ class ManagerMatchViewModel @Inject constructor(
         _showHrFinalPicker.update { false }
     }
 
+    fun openErrorDialog(message: String) {
+        _errorMessage.update { message }
+        _showErrorDialog.update { true }
+    }
+
+    fun hideErrorDialog() {
+        _errorMessage.update { null }
+        _showErrorDialog.update { false }
+    }
+
     fun onSaveMatchClicked(
         onSuccess: () -> Unit,
         onFail: (error: String) -> Unit,
@@ -235,17 +262,20 @@ class ManagerMatchViewModel @Inject constructor(
                 return
             }
 
-            throw Exception("Comparar data inicial com final")
+            val startAt = montaDate(_dtInicial.value!!, _hrInicial.value!!)
+            val endAt = montaDate(_dtFinal.value!!, _hrFinal.value!!)
+
+            checkDates(startAt, endAt)
 
             val newMatch = Match(
-                id = _match.value.id,
+                id = _match.value?.id ?: 0,
                 homeTeam = _homeTeamName.value,
                 homeScore = 0,
                 awayTeam = _awayTeamName.value,
                 awayScore = 0,
                 createAt = Date(),
-                startAt = Date(),
-                endAt = Date(),
+                startAt = startAt,
+                endAt = endAt,
             )
 
             if (newMatch.id > 0) {
@@ -256,14 +286,35 @@ class ManagerMatchViewModel @Inject constructor(
 
             onSuccess()
 
-        } catch (e: Exception) {
+        }
+        catch (e: InvalidDate) {
+            onFail(e.message ?: "Datas inválidas, verifique.")
+        }
+        catch (e: Exception) {
             onFail("Ops, um problema aconteceu durante a criação da partida.\n${e.message}")
-
         } finally {
             _isSaving.update { false }
         }
     }
 
+    fun deleteMatch(
+        onSuccess: () -> Unit,
+        onFail: (error: String) -> Unit,
+    ) {
+        viewModelScope.launch {
+            _match.value?.let {
+                try {
+                    matchRepository.deleteMatch(it)
+                    onSuccess()
+                } catch (e: Exception) {
+                    onFail("Não foi possível remover a partida.\n${e.message}")
+                }
+            } ?: run {
+                onFail("Ops, a partida não foi encontrada.")
+            }
+
+        }
+    }
 
     private fun formatarDataEHora(dataMillis: Long?, hora: LocalTime?): String {
 
@@ -284,6 +335,31 @@ class ManagerMatchViewModel @Inject constructor(
             dataFormatada != null -> dataFormatada
             horaFormatada != null -> horaFormatada
             else -> "Selecionar data"
+        }
+    }
+
+    private fun montaDate(timestampMilli: Long, localTime: LocalTime): Date {
+        val localDate: LocalDate = Instant.ofEpochMilli(timestampMilli)
+            .atZone(ZoneOffset.UTC)
+            .toLocalDate()
+
+        val localDateTime: LocalDateTime = LocalDateTime.of(localDate, localTime)
+
+        val instant: Instant = localDateTime
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+
+        return Date.from(instant)
+    }
+
+    private fun checkDates(startAt: Date, endAt: Date) {
+
+        if (!startAt.after(Date())) {
+            throw InvalidDate("A Data/Hora Inicial deve ser posterior ao horário atual.")
+        }
+
+        if (!endAt.after(startAt)) {
+            throw InvalidDate("A Data/Hora Final deve ser posterior à Data/Hora Inicial.")
         }
     }
 

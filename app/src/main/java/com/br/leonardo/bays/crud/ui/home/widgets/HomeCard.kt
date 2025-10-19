@@ -33,6 +33,7 @@ fun HomeCard(navController: NavController, match: Match) {
                 return@Card
             }
 
+            println("testeeee")
         }
     ) {
         Row(

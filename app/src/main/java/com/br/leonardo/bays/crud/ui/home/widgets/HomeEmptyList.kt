@@ -54,10 +54,7 @@ fun HomeEmptyList(navController: NavController, viewModel: HomeViewModel) {
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = Color.White,
             ),
-            onClick = {
-//                navController.navigate(Screen.ManagerMatchScreen.route)
-                viewModel.saveMatch()
-            }
+            onClick = { navController.navigate(Screen.ManagerMatchScreen.route) }
         ) {
             Text("Criar jogo")
         }

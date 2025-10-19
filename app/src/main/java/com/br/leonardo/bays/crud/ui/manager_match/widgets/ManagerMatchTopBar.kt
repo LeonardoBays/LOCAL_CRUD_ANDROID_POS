@@ -18,10 +18,9 @@ import com.br.leonardo.bays.crud.viewmodel.manager_match.ManagerMatchViewModel
 fun ManagerMatchTopBar(navController: NavController, viewModel: ManagerMatchViewModel) {
     CenterAlignedTopAppBar(
         title = {
+            val isCreating by viewModel.isCreating.collectAsState()
 
-            val match by viewModel.match.collectAsState()
-
-            val text = if (match.isCreating()) "Criar nova partida" else "Atualizar partida"
+            val text = if (isCreating) "Criar nova partida" else "Atualizar partida"
 
             Text(text = text)
         },
