@@ -77,6 +77,9 @@ class ManagerMatchViewModel @Inject constructor(
     private val _isCreating = MutableStateFlow<Boolean>(true)
     val isCreating: StateFlow<Boolean> = _isCreating
 
+    private val _showDeleteDialog = MutableStateFlow<Boolean>(false)
+    val showDeleteDialog: StateFlow<Boolean> = _showDeleteDialog
+
     val dateLabelInicial: String
         get() {
             val dataMillis = _dtInicial.value
@@ -208,6 +211,14 @@ class ManagerMatchViewModel @Inject constructor(
         _showErrorDialog.update { false }
     }
 
+    fun openDeleteDialog() {
+        _showDeleteDialog.update { true }
+    }
+
+    fun hideDeleteDialog() {
+        _showDeleteDialog.update { false }
+    }
+
     fun onSaveMatchClicked(
         onSuccess: () -> Unit,
         onFail: (error: String) -> Unit,
@@ -312,7 +323,6 @@ class ManagerMatchViewModel @Inject constructor(
             } ?: run {
                 onFail("Ops, a partida não foi encontrada.")
             }
-
         }
     }
 

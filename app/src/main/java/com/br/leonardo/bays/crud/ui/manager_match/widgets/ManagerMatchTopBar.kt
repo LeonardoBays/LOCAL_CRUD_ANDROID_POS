@@ -2,6 +2,7 @@ package com.br.leonardo.bays.crud.ui.manager_match.widgets
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,13 +17,24 @@ import com.br.leonardo.bays.crud.viewmodel.manager_match.ManagerMatchViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManagerMatchTopBar(navController: NavController, viewModel: ManagerMatchViewModel) {
+
+    val isCreating by viewModel.isCreating.collectAsState()
+
     CenterAlignedTopAppBar(
         title = {
-            val isCreating by viewModel.isCreating.collectAsState()
-
             val text = if (isCreating) "Criar nova partida" else "Atualizar partida"
 
             Text(text = text)
+        },
+        actions = {
+            if (!isCreating) {
+                IconButton(onClick = viewModel::openDeleteDialog) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Remover"
+                    )
+                }
+            }
         },
         navigationIcon = {
             IconButton(onClick = {

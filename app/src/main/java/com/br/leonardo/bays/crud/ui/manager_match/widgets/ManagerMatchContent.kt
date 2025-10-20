@@ -47,6 +47,7 @@ fun ManagerMatchContent(navController: NavController, viewModel: ManagerMatchVie
     val hrInicial by viewModel.hrInicial.collectAsState()
     val hrFinal by viewModel.hrFinal.collectAsState()
     val showErrorDialog by viewModel.showErrorDialog.collectAsState()
+    val showDeleteDialog by viewModel.showDeleteDialog.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val isCreating by viewModel.isCreating.collectAsState()
     val dateLabelInicial = viewModel.dateLabelInicial
@@ -174,13 +175,37 @@ fun ManagerMatchContent(navController: NavController, viewModel: ManagerMatchVie
 
             if (showErrorDialog) {
                 AlertDialog(
-                    onDismissRequest = { viewModel::hideErrorDialog },
+                    onDismissRequest = viewModel::hideErrorDialog,
                     confirmButton = {
                         TextButton(onClick = viewModel::hideErrorDialog) {
                             Text(text = "Ok")
                         }
                     },
                     text = { Text(text = errorMessage ?: "Ops, algo inesperado aconteceu!") }
+                )
+            }
+
+            if (showDeleteDialog) {
+                AlertDialog(
+                    onDismissRequest = viewModel::hideDeleteDialog,
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                viewModel.hideDeleteDialog()
+                                viewModel.deleteMatch(
+                                    onSuccess = { navController.popBackStack() },
+                                    onFail = viewModel::openErrorDialog,
+                                )
+                            }) {
+                            Text(text = "Sim")
+                        }
+                    },
+                    dismissButton = {
+                        Button(onClick = viewModel::hideDeleteDialog) {
+                            Text(text = "Não")
+                        }
+                    },
+                    text = { Text(text = "Tem certeza que deseja remover a partida?") }
                 )
             }
 
