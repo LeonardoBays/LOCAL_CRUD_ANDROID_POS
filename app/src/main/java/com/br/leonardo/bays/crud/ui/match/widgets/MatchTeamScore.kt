@@ -33,7 +33,7 @@ fun RowScope.MatchTeamScore(
         modifier = Modifier.weight(1f)
     ) {
         Text(
-            text = teamName.toUpperCase(),
+            text = teamName.uppercase(),
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 8.dp)

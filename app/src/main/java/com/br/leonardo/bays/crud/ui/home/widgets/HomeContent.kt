@@ -17,7 +17,7 @@ fun HomeContent(navController: NavController, viewModel: HomeViewModel) {
         is HomeState.Empty -> HomeEmptyList(navController, viewModel)
         is HomeState.Success -> HomeList(
             navController,
-            (state as HomeState.Success).todos,
+            (state as HomeState.Success).matches,
         )
 
         is HomeState.Error -> HomeFail((state as HomeState.Error).message)

@@ -28,32 +28,10 @@ data class Match(
         endAt = Date(),
     )
 
-    fun copy(
-        homeTeam: String? = null,
-        homeScore: Long? = null,
-        awayTeam: String? = null,
-        awayScore: Long? = null,
-        createAt: Date? = null,
-        startAt: Date? = null,
-        endAt: Date? = null
-    ): Match {
-        return this.copy(
-            homeTeam = homeTeam ?: this.homeTeam,
-            homeScore = homeScore ?: this.homeScore,
-            awayTeam = awayTeam ?: this.awayTeam,
-            awayScore = awayScore ?: this.awayScore,
-            createAt = createAt ?: this.createAt,
-            startAt = startAt ?: this.startAt,
-            endAt = endAt ?: this.endAt
-        )
-    }
-
     fun isInProgress(): Boolean {
         val now = Date()
         return now.after(startAt) && now.before(endAt)
     }
-
-    fun isCreating(): Boolean = id <= 0
 
     fun isFinished(): Boolean {
         val now = Date()

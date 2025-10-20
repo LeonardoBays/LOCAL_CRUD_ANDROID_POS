@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CRUD</string>
+    <string name="app_name">Partidas</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_match">MatchActivity</string>
 </resources>

@@ -32,6 +32,9 @@ class HomeViewModel @Inject constructor(
             _uiState.value = HomeState.Loading
             try {
                 matchRepository.getAllMatch().collectLatest { list ->
+
+                    listOf<Match>()
+
                     when (list.isEmpty()) {
                         true -> _uiState.value = HomeState.Empty
                         false -> _uiState.value = HomeState.Success(list)
