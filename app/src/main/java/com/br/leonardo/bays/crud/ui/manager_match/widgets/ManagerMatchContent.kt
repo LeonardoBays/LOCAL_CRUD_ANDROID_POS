@@ -37,7 +37,6 @@ fun ManagerMatchContent(navController: NavController, viewModel: ManagerMatchVie
         return
     }
 
-    val match by viewModel.match.collectAsState()
     val showDtInicialPicker by viewModel.showDtInicialPicker.collectAsState()
     val showDtFinalPicker by viewModel.showDtFinalPicker.collectAsState()
     val showHrInicialPicker by viewModel.showHrInicialPicker.collectAsState()

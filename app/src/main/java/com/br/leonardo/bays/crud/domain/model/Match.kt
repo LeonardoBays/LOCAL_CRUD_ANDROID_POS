@@ -1,6 +1,8 @@
 package com.br.leonardo.bays.crud.domain.model
 
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import kotlin.math.max
 import kotlin.math.min
 
@@ -72,5 +74,21 @@ data class Match(
 
     fun increaseAway(): Match {
         return this.copy(homeScore = min(this.awayScore + 1, 99))
+    }
+
+    fun statusPartida(): String {
+        val now = Date()
+
+        if (now.after(endAt)) {
+            return "A partida já encerrou."
+        }
+
+        if (now.before(startAt)) {
+            val dataFormatada =
+                SimpleDateFormat("dd/MM 'às' HH:mm", Locale.getDefault()).format(startAt)
+            return "Início previsto para $dataFormatada."
+        }
+
+        return "A partida está em andamento."
     }
 }

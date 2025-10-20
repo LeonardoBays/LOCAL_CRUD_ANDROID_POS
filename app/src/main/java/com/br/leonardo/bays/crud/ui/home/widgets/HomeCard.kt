@@ -1,9 +1,12 @@
 package com.br.leonardo.bays.crud.ui.home.widgets
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -16,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.room.util.TableInfo
 import com.br.leonardo.bays.crud.domain.model.Match
 import com.br.leonardo.bays.crud.ui.Screen
 
@@ -32,46 +36,50 @@ fun HomeCard(navController: NavController, match: Match) {
                 navController.navigate(Screen.ManagerMatchScreen.route + "?matchId=${match.id}")
                 return@Card
             }
-
-            println("testeeee")
         }
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+        Box(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
         ) {
-            Text(
-                text = match.homeTeam,
-                modifier = Modifier
-                    .weight(1f)
-                    .wrapContentHeight(),
-                textAlign = TextAlign.Start,
-                maxLines = Int.MAX_VALUE,
-                overflow = TextOverflow.Visible
-            )
-            Row(
-                modifier = Modifier.padding(horizontal = 12.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = match.homeScore.toString())
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = " - ")
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = match.awayScore.toString())
-            }
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                ) {
+                    Text(
+                        text = match.homeTeam,
+                        modifier = Modifier
+                            .weight(1f)
+                            .wrapContentHeight(),
+                        textAlign = TextAlign.Start,
+                        maxLines = Int.MAX_VALUE,
+                        overflow = TextOverflow.Visible
+                    )
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = match.homeScore.toString())
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(text = " - ")
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(text = match.awayScore.toString())
+                    }
 
-            Text(
-                text = match.awayTeam,
-                modifier = Modifier
-                    .weight(1f)
-                    .wrapContentHeight(),
-                textAlign = TextAlign.End,
-                maxLines = Int.MAX_VALUE,
-                overflow = TextOverflow.Visible
-            )
+                    Text(
+                        text = match.awayTeam,
+                        modifier = Modifier
+                            .weight(1f)
+                            .wrapContentHeight(),
+                        textAlign = TextAlign.End,
+                        maxLines = Int.MAX_VALUE,
+                        overflow = TextOverflow.Visible
+                    )
+                }
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(text = match.statusPartida())
+            }
         }
 
     }
